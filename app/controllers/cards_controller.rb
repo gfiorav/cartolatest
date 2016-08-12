@@ -1,29 +1,34 @@
+require 'carto_latest/metrics'
+
 class CardsController < ApplicationController
-  before_filter :fetch_latest_published, only: :index
+  before_filter :fetch_latest_published, only: :index, if: :refresh_possible
   after_filter :remove_old_cards, only: :index
 
-  MAX_CARDS = 10
+  COLUMNS = 3
+  ROWS = 4
+  CARDS = COLUMNS * ROWS
+
+  MIN_TIME_FOR_REFRESH = 5.minutes
 
   def index
-    @cards = Card.order(created_at: :desc).take(MAX_CARDS)
+    @cards = Card.order(created_at: :desc).take(CARDS)
+    @columns = COLUMNS
+    @rows = ROWS
   end
 
   private
 
+    def refresh_possible
+      Time.now.utc - Card.order(created_at: :desc).first.created_at > MIN_TIME_FOR_REFRESH
+    end
+
     def fetch_latest_published
-      keen = Keen::Client.new(project_id: Rails.configuration.keen[:project_id],
-                              read_key: Rails.configuration.keen[:read_key])
-
-      last_published = keen.extraction('Published map', timeframe: 'this_2_days')
-
-      new_cards = last_published.map do |event|
-        Card.from_event(event)
-      end
+      new_cards = CartoLatest::Metrics.new.latest_published.map { |event| Card.from_event(event) }
 
       new_cards.each(&:save)
     end
 
     def remove_old_cards
-      (Card.all - Card.order(created_at: :desc).take(MAX_CARDS)).each(&:destroy)
+      (Card.all - Card.order(created_at: :desc).take(CARDS)).each(&:destroy)
     end
 end

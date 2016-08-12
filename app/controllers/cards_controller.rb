@@ -19,6 +19,8 @@ class CardsController < ApplicationController
   private
 
     def refresh_possible
+      return true unless Card.any?
+
       Time.now.utc - Card.order(created_at: :desc).first.created_at > MIN_TIME_FOR_REFRESH
     end
 

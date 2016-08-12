@@ -83,4 +83,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  # Keen config
+  config.keen = { project_id: ENV['KEEN_PROJECT_ID'], read_key: ENV['KEEN_READ_KEY'] }
 end

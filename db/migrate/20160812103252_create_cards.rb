@@ -5,6 +5,7 @@ class CreateCards < ActiveRecord::Migration[5.0]
       t.string :organization, null: false
       t.string :privacy, null: false, defualt: 'private'
       t.uuid :visualization_id, null: false
+      t.timestamps
     end
   end
 end

@@ -1,11 +1,11 @@
 class CardsController < ApplicationController
   before_filter :fetch_latest_published, only: :index
-  before_filter :remove_old_cards, only: :index
+  after_filter :remove_old_cards, only: :index
 
   MAX_CARDS = 10
 
   def index
-    @cards = Card.order(created_at: :desc)
+    @cards = Card.order(created_at: :desc).take(MAX_CARDS)
   end
 
   private

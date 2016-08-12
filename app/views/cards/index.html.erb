@@ -1,56 +1,85 @@
-<div class='container'>
-  <section class='main-display'>
-    <div class='large-map-conatiner'>
+<div class='main-map'>
+  <img id='bm'/>
+  <div class='main-map-overlay'>
+    <div class='metainfo'>
+      <h1 id='title'></h1>
+      <h2 id='author'></h1>
     </div>
-    <div class='large-map-metainfo'>
+  </div>
+</div>
+<div class='bottom-bar'>
+  <% @cards.each_with_index do |_, index| %>
+    <div class='small-map'>
+      <img id='sm-<%= index %>'/>
     </div>
-  </section>
-  <section class='right-panel'>
-    <section class='carousel-metainfo'></section>
-    <section class='carousel-container'>
-      <div class='small-map-container'></div>
-      <div class='small-map-container'></div>
-      <div class='small-map-container'></div>
-      <div class='small-map-container'></div>
-      <div class='small-map-container'></div>
-    </section>
-  </section>
+  <% end %>
 </div>
 
 <script type="text/javascript">
-  var urls = <%= raw @cards.map(&:url).to_json %>
-  var columns = <%= @columns %>
-  var rows = <%= @rows %>
+  var cards = <%= raw @cards.map { |card| present_card(card) }.to_json %>
+  var currentlyShowing = 0;
 
   $(document).ready(function () {
-    loadMainMap(urls[0]);
-    loadCarousel(urls.slice(1,6));
+    setUp();
 
-    function loadMainMap(url) {
-      appendImgToContainer($('.large-map-conatiner'), url);
+    setInterval(loadBoard, 1000);
+
+    function setUp () {
+      setupBigMap();
+      setupSmallMaps();
     }
 
-    function loadCarousel(urls) {
-      $('.small-map-container').each(function (index) {
-        appendImgToContainer($(this), urls[index], 10);
-      })
+    function loadBoard() {
+      loadBigMap(cards[currentlyShowing]);
+      loadSmallMaps(cards);
+
+      currentlyShowing++;
     }
 
-    function appendImgToContainer(container, url, padding) {
-      if (!padding) { padding = 0 }
+    function loadBigMap(card) {
+      var bMURL = URLForDimensions(card.url, BMWidth, BMHeight);
 
-      var width = container.width() - padding;
-      var height = container.height() - padding;
+      document.getElementById('bm').setAttribute('src', bMURL)
+      document.getElementById('title').innerHTML = 'Untitled Map';
+      document.getElementById('author').innerHTML = 'by ' + card.username;
+    }
 
-      var card = document.createElement('img');
+    function setupBigMap() {
+      var bigMap = document.getElementById('bm');
+      var container = $('.main-map');
 
-      card.setAttribute('height', height);
-      card.setAttribute('width', width);
-      card.setAttribute('src', URLForDimensions(url, width, height));
-      card.style.paddingLeft = padding / 2 + 'px';
-      card.style.paddingTop = padding / 2 + 'px';
+      BMWidth = container.width();
+      BMHeight = container.height();
 
-      container.append(card);
+      setObjectDimensions(bigMap, BMWidth, BMHeight);
+    }
+
+    function setupSmallMaps() {
+      var container = $('.small-map');
+
+      SMWidth = container.width();
+      SMHeight = container.height();
+
+      for (var c in cards) {
+        setObjectDimensions(document.getElementById('sm-' + c), SMWidth, SMHeight);
+      }
+    }
+
+    function loadSmallMaps(cards) {
+      for (var c in cards) {
+        loadSmallMap(cards[c], c);
+      }
+    }
+
+    function loadSmallMap(card, index) {
+      var sMURL = URLForDimensions(card.url, SMWidth, SMHeight);
+
+      document.getElementById('sm-' + index).setAttribute('src', sMURL)
+    }
+
+    function setObjectDimensions(object, width, height) {
+      object.setAttribute('width', width);
+      object.setAttribute('height', height);
     }
 
     function URLForDimensions(url, width, height) {

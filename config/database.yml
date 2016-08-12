@@ -14,9 +14,21 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
-default: &default
+
+development:
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  database: cartolatest_development
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: cartolatest_test
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: cartolatest_production
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>

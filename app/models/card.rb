@@ -12,9 +12,19 @@ class Card < ActiveRecord::Base
         privacy: indifferent_event[:privacy])
   end
 
+  def self.latest_updated
+    order(created_at: :desc).take(1).created_at
+  end
+
   def embed_url
     subdomain = organization.present? ? organization : username
 
     "https://#{subdomain}.carto.com/u/#{username}/builder/#{visualization_id}/embed"
+  end
+
+  def url
+    template_name = "tpl_#{visualization_id.gsub('-','_')}"
+
+    "https://#{username}.carto.com/api/v1/map/static/named/#{template_name}/{X}/{Y}.png"
   end
 end

@@ -16,6 +16,12 @@ ActiveRecord::Schema.define(version: 20160812103252) do
   enable_extension "plpgsql"
 
   create_table "cards", force: :cascade do |t|
+    t.string   "username",         null: false
+    t.string   "organization"
+    t.string   "privacy",          null: false
+    t.uuid     "visualization_id", null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
   end
 
 end

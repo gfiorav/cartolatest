@@ -1,15 +1,22 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title></title>
-</head>
-<body>
-  <% @cards.each do |card| %>
-    <h2><%= card.visualization_id %></h2>
-    <h2><%= card.created_at %></h2>
-    <h2><%= card.username %></h2>
-    <h2><%= card.organization %></h2>
-    <a href="<%= card.embed_url %>">embed</a>
-  <% end %>
-</body>
-</html>
+<script type="text/javascript">
+  var urls = <%= raw @cards.map(&:url).to_json %>
+  var columns = <%= @columns %>
+  var rows = <%= @rows %>
+
+  $(document).ready(function () {
+    var card_height = $(window).height() / columns;
+    var card_width = $(window).width() / rows;
+
+    for (var u in urls) {
+      var card = document.createElement('img');
+      var prepared_url = urls[u].replace('{X}', Math.floor(card_width))
+                                .replace('{Y}', Math.floor(card_height));
+
+      card.setAttribute('height', card_height);
+      card.setAttribute('width', card_width);
+      card.setAttribute('src', prepared_url);
+
+      document.getElementsByTagName('body')[0].appendChild(card);
+    }
+  })
+</script>

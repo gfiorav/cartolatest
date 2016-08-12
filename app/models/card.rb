@@ -1,5 +1,5 @@
 class Card < ActiveRecord::Base
-  validates :username, :organization, :visualization_id, :privacy, presence: true
+  validates :username, :visualization_id, :privacy, presence: true
   validates :visualization_id, uniqueness: true
   validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis
 
@@ -8,7 +8,13 @@ class Card < ActiveRecord::Base
 
     new(username: indifferent_event[:username],
         organization: indifferent_event[:organization],
-        visualization_id: indifferent_event[:visualization_id],
+        visualization_id: indifferent_event[:vis_id],
         privacy: indifferent_event[:privacy])
+  end
+
+  def embed_url
+    subdomain = organization.present? ? "#{organization}." : ''
+
+    "https://#{subdomain}carto.com/u/#{username}/builder/#{visualization_id}/embed"
   end
 end

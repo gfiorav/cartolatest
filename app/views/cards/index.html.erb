@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <% @cards.each do |card| %>
+    <h2><%= card.visualization_id %></h2>
+    <h2><%= card.created_at %></h2>
+    <h2><%= card.username %></h2>
+    <h2><%= card.organization %></h2>
+    <a href="<%= card.embed_url %>">embed</a>
+  <% end %>
+</body>
+</html>

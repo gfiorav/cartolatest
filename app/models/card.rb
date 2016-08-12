@@ -13,8 +13,8 @@ class Card < ActiveRecord::Base
   end
 
   def embed_url
-    subdomain = organization.present? ? "#{organization}." : ''
+    subdomain = organization.present? ? organization : username
 
-    "https://#{subdomain}carto.com/u/#{username}/builder/#{visualization_id}/embed"
+    "https://#{subdomain}.carto.com/u/#{username}/builder/#{visualization_id}/embed"
   end
 end

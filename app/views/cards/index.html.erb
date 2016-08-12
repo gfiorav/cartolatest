@@ -1,22 +1,60 @@
+<div class='container'>
+  <section class='main-display'>
+    <div class='large-map-conatiner'>
+    </div>
+    <div class='large-map-metainfo'>
+    </div>
+  </section>
+  <section class='right-panel'>
+    <section class='carousel-metainfo'></section>
+    <section class='carousel-container'>
+      <div class='small-map-container'></div>
+      <div class='small-map-container'></div>
+      <div class='small-map-container'></div>
+      <div class='small-map-container'></div>
+      <div class='small-map-container'></div>
+    </section>
+  </section>
+</div>
+
 <script type="text/javascript">
   var urls = <%= raw @cards.map(&:url).to_json %>
   var columns = <%= @columns %>
   var rows = <%= @rows %>
 
   $(document).ready(function () {
-    var card_height = $(window).height() / columns;
-    var card_width = $(window).width() / rows;
+    loadMainMap(urls[0]);
+    loadCarousel(urls.slice(1,6));
 
-    for (var u in urls) {
+    function loadMainMap(url) {
+      appendImgToContainer($('.large-map-conatiner'), url);
+    }
+
+    function loadCarousel(urls) {
+      $('.small-map-container').each(function (index) {
+        appendImgToContainer($(this), urls[index], 10);
+      })
+    }
+
+    function appendImgToContainer(container, url, padding) {
+      if (!padding) { padding = 0 }
+
+      var width = container.width() - padding;
+      var height = container.height() - padding;
+
       var card = document.createElement('img');
-      var prepared_url = urls[u].replace('{X}', Math.floor(card_width))
-                                .replace('{Y}', Math.floor(card_height));
 
-      card.setAttribute('height', card_height);
-      card.setAttribute('width', card_width);
-      card.setAttribute('src', prepared_url);
+      card.setAttribute('height', height);
+      card.setAttribute('width', width);
+      card.setAttribute('src', URLForDimensions(url, width, height));
+      card.style.paddingLeft = padding / 2 + 'px';
+      card.style.paddingTop = padding / 2 + 'px';
 
-      document.getElementsByTagName('body')[0].appendChild(card);
+      container.append(card);
+    }
+
+    function URLForDimensions(url, width, height) {
+      return url.replace('{X}', Math.floor(width)).replace('{Y}', Math.floor(height));
     }
   })
 </script>

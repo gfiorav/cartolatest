@@ -21,8 +21,7 @@
 
   $(document).ready(function () {
     setUp();
-
-    setInterval(loadBoard, 1000);
+    pid = setInterval(loadBoard, 5000);
 
     function setUp () {
       setupBigMap();
@@ -33,7 +32,13 @@
       loadBigMap(cards[currentlyShowing]);
       loadSmallMaps(cards);
 
-      currentlyShowing++;
+      if (currentlyShowing === cards.length - 1) {
+        clearInterval(pid);
+        window.location.reload();
+      } else {
+        currentlyShowing++;
+      }
+
     }
 
     function loadBigMap(card) {

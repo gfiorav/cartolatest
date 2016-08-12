@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20160812103252) do
     t.string   "organization"
     t.string   "privacy",          null: false
     t.uuid     "visualization_id", null: false
+    t.datetime "published_at",     null: false
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
   end

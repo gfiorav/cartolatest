@@ -9,7 +9,8 @@ class Card < ActiveRecord::Base
     new(username: indifferent_event[:username],
         organization: indifferent_event[:organization],
         visualization_id: indifferent_event[:vis_id],
-        privacy: indifferent_event[:privacy])
+        privacy: indifferent_event[:privacy],
+        published_at: indifferent_event[:creation_time])
   end
 
   def self.latest_updated

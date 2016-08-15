@@ -53,7 +53,7 @@
       loadBigMap(maps[currentlyShowing]);
       loadSmallMaps(maps);
 
-      (currentlyShowing++)%maps.length;
+      currentlyShowing = (currentlyShowing + 1)%maps.length;
     }
 
     function setupBigMap() {

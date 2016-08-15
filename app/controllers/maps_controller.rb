@@ -1,8 +1,6 @@
 require 'carto_latest/metrics'
 
 class MapsController < ApplicationController
-  skip_before_filter :verify_authenticity_token, only: :create
-
   before_filter :authorize, only: :create
   before_filter :destroy_if_earlier_exists, only: :create
 

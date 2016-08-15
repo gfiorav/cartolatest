@@ -10,9 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 20160815105547) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "apps", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "app_id",     null: false
+    t.string   "app_key",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "maps", force: :cascade do |t|
+    t.string   "author",                                    null: false
+    t.string   "title",            default: "Untitled Map", null: false
+    t.string   "organization"
+    t.string   "privacy",                                   null: false
+    t.uuid     "visualization_id",                          null: false
+    t.datetime "published_at",                              null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+  end
 
 end

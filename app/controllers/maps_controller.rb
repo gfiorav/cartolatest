@@ -8,8 +8,8 @@ class MapsController < ApplicationController
 
   after_filter :remove_old_maps
 
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found
-  rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
   MAX_MAPS = 50
 

@@ -5,15 +5,11 @@ class MapsController < ApplicationController
 
   before_filter :authorize, only: :create
   before_filter :destroy_if_earlier_exists, only: :create
+
   after_filter :remove_old_maps
 
-  rescue_from ActiveRecord::RecordNotFound do |exception|
-    render json: { exception: exception }, status: :not_found
-  end
-
-  rescue_from ActiveRecord::RecordInvalid do |exception|
-    render json: exception.record.errors, status: :unprocessable_entity
-  end
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found
+  rescue_from ActiveRecord::RecordInvalid, with: :unprocessable_entity
 
   MAX_MAPS = 50
 
@@ -30,10 +26,10 @@ class MapsController < ApplicationController
   private
 
     def authorize
-      name = request.headers['X-App-Name']
-      token = request.headers['X-App-Token']
+      app_id = request.headers['X-App-ID']
+      app_key = request.headers['X-App-Key']
 
-      unless App.find_by!(name: name).authorized?(token)
+      unless App.find_by!(app_id: app_id).authorized?(app_key)
         render status: :unauthorized
       end
     end
@@ -46,7 +42,7 @@ class MapsController < ApplicationController
     end
 
     def map_params
-      params.permit(:username, :organization, :visualization_id, :privacy, :published_at)
+      params.permit(:author, :organization, :visualization_id, :privacy, :published_at)
     end
 
     def remove_old_maps

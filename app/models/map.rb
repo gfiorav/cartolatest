@@ -1,6 +1,5 @@
 class Map < ActiveRecord::Base
-  validates :author, :visualization_id, :privacy, presence: true
-  validates :name
+  validates :author, :visualization_id, :privacy, :published_at, presence: true
   validates :visualization_id, uniqueness: true
   validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis
 

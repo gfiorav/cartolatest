@@ -20,7 +20,7 @@ class MapsController < ApplicationController
   def create
     Map.new(map_params).save!
 
-    render json: 'Thanks for posting!', status: :ok
+    render json: 'Thanks for sharing!', status: :ok
   end
 
   private

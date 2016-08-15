@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'redis', '~> 3.0'
 gem 'rails', '~> 5.0.0'
 gem 'pg'
 gem 'puma', '~> 3.0'

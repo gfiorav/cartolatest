@@ -16,7 +16,7 @@
 </div>
 
 <script type="text/javascript">
-  var maps = <%= raw @maps.map { |card| present_card(card) }.to_json %>
+  var maps = <%= raw @maps.map { |map| present_map(map) }.to_json %>
   var currentlyShowing = 0;
 
   $(document).ready(function () {
@@ -41,12 +41,12 @@
 
     }
 
-    function loadBigMap(card) {
-      var bMURL = URLForDimensions(card.url, BMWidth, BMHeight);
+    function loadBigMap(map) {
+      var bMURL = URLForDimensions(map.url, BMWidth, BMHeight);
 
       document.getElementById('bm').setAttribute('src', bMURL)
       document.getElementById('title').innerHTML = 'Untitled Map';
-      document.getElementById('author').innerHTML = 'by ' + card.username;
+      document.getElementById('author').innerHTML = 'by ' + map.username;
     }
 
     function setupBigMap() {
@@ -76,8 +76,8 @@
       }
     }
 
-    function loadSmallMap(card, index) {
-      var sMURL = URLForDimensions(card.url, SMWidth, SMHeight);
+    function loadSmallMap(map, index) {
+      var sMURL = URLForDimensions(map.url, SMWidth, SMHeight);
 
       document.getElementById('sm-' + index).setAttribute('src', sMURL)
     }

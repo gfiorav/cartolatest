@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class='bottom-bar'>
-  <% MapsController::MAX_DISPLAYED_MAPS.times do |index| %>
+  <% MapsController::MAX_DISPLAY_MAPS.times do |index| %>
     <div class='small-map'>
       <img id='sm-<%= index %>'/>
     </div>
@@ -16,7 +16,7 @@
 </div>
 
 <script type="text/javascript">
-  MAX_DISPLAYED_MAPS = <%= MapsController::MAX_DISPLAYED_MAPS %>;
+  MAX_DISPLAY_MAPS = <%= MapsController::MAX_DISPLAY_MAPS %>;
 
   var maps = <%= raw @maps.map(&:to_hash).to_json %>
 
@@ -31,7 +31,7 @@
         },
 
         received: function (message) {
-          if (maps.length > MAX_DISPLAYED_MAPS) {
+          if (maps.length > MAX_DISPLAY_MAPS) {
             maps.pop();
           }
 
@@ -73,7 +73,7 @@
       SMWidth = container.width();
       SMHeight = container.height();
 
-      for (var c = 0; c < MAX_DISPLAYED_MAPS; c++) {
+      for (var c = 0; c < MAX_DISPLAY_MAPS; c++) {
         setObjectDimensions(document.getElementById('sm-' + c), SMWidth, SMHeight);
       }
     }

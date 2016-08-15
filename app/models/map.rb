@@ -3,6 +3,8 @@ class Map < ActiveRecord::Base
   validates :visualization_id, uniqueness: true
   validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis
 
+  after_create_commit { MapBroadcastJob.perform_later(visualization_id) }
+
   def self.from_event(event)
     indifferent_event = event.with_indifferent_access
 

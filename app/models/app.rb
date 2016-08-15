@@ -4,7 +4,7 @@ class App < ApplicationRecord
 
   validates :name, length: { in: 4..24 }
 
-  def authorized?(id, key)
-    app_id == id && app_key == key
+  def authorized?(key)
+    app_key == key
   end
 end

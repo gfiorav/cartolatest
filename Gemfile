@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'keen', '~> 0.9.6'
 gem 'rails', '~> 5.0.0'
 gem 'pg'
 gem 'puma', '~> 3.0'

@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class='bottom-bar'>
-  <% @cards.each_with_index do |_, index| %>
+  <% @maps.each_with_index do |_, index| %>
     <div class='small-map'>
       <img id='sm-<%= index %>'/>
     </div>
@@ -16,7 +16,7 @@
 </div>
 
 <script type="text/javascript">
-  var cards = <%= raw @cards.map { |card| present_card(card) }.to_json %>
+  var maps = <%= raw @maps.map { |card| present_card(card) }.to_json %>
   var currentlyShowing = 0;
 
   $(document).ready(function () {
@@ -29,10 +29,10 @@
     }
 
     function loadBoard() {
-      loadBigMap(cards[currentlyShowing]);
-      loadSmallMaps(cards);
+      loadBigMap(maps[currentlyShowing]);
+      loadSmallMaps(maps);
 
-      if (currentlyShowing === cards.length - 1) {
+      if (currentlyShowing === maps.length - 1) {
         clearInterval(pid);
         window.location.reload();
       } else {
@@ -65,14 +65,14 @@
       SMWidth = container.width();
       SMHeight = container.height();
 
-      for (var c in cards) {
+      for (var c in maps) {
         setObjectDimensions(document.getElementById('sm-' + c), SMWidth, SMHeight);
       }
     }
 
-    function loadSmallMaps(cards) {
-      for (var c in cards) {
-        loadSmallMap(cards[c], c);
+    function loadSmallMaps(maps) {
+      for (var c in maps) {
+        loadSmallMap(maps[c], c);
       }
     }
 

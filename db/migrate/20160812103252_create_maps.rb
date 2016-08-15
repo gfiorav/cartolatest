@@ -1,6 +1,6 @@
-class CreateCards < ActiveRecord::Migration[5.0]
+class CreateMaps < ActiveRecord::Migration[5.0]
   def change
-    create_table :cards do |t|
+    create_table :maps do |t|
       t.string :username, null: false
       t.string :organization
       t.string :privacy, null: false, defualt: 'private'

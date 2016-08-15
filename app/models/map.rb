@@ -1,4 +1,4 @@
-class Card < ActiveRecord::Base
+class Map < ActiveRecord::Base
   validates :username, :visualization_id, :privacy, presence: true
   validates :visualization_id, uniqueness: true
   validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis

@@ -107,5 +107,9 @@
     function URLForDimensions(url, width, height) {
       return url.replace('{X}', Math.floor(width)).replace('{Y}', Math.floor(height));
     }
-  })
+
+    $(window).resize(function() {
+      setUp();
+    });
+  });
 </script>

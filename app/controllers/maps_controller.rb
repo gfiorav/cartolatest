@@ -1,4 +1,3 @@
-require 'carto_latest/metrics'
 
 class MapsController < ApplicationController
   before_filter :authorize, only: :create

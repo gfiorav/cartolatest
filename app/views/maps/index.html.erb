@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class='bottom-bar'>
-  <% MapsController::MAX_DISPLAY_MAPS.times do |index| %>
+  <% (MapsController::MAX_DISPLAY_MAPS - 1).times do |index| %>
     <div class='small-map'>
       <img id='sm-<%= index %>'/>
     </div>
@@ -17,12 +17,16 @@
 
 <script type="text/javascript">
   MAX_DISPLAY_MAPS = <%= MapsController::MAX_DISPLAY_MAPS %>;
+  FADE_DURATION_MS = 500;
 
-  var maps = <%= raw @maps.map(&:to_hash).to_json %>
+  var maps = <%= raw @maps.map(&:to_hash).each { |hash| hash[:taiw] = time_ago_in_words(hash[:published_at])}.to_json %>
+  var currentlyShowing = 0;
 
   $(document).ready(function () {
     setUp();
     showNextMap();
+
+    pid = setInterval(showNextMap, 10000);
 
     function setUp () {
       App.published = App.cable.subscriptions.create("PublishedChannel", {
@@ -45,16 +49,10 @@
     }
 
     function showNextMap() {
-      loadBigMap(maps[0]);
+      loadBigMap(maps[currentlyShowing]);
       loadSmallMaps(maps);
-    }
 
-    function loadBigMap(map) {
-      var bMURL = URLForDimensions(map.url, BMWidth, BMHeight);
-
-      document.getElementById('bm').setAttribute('src', bMURL)
-      document.getElementById('title').innerHTML = map.title;
-      document.getElementById('author').innerHTML = 'by ' + map.author;
+      (currentlyShowing++)%maps.length;
     }
 
     function setupBigMap() {
@@ -73,15 +71,25 @@
       SMWidth = container.width();
       SMHeight = container.height();
 
-      for (var c = 0; c < MAX_DISPLAY_MAPS; c++) {
+      for (var c = 0; c < (MAX_DISPLAY_MAPS - 1); c++) {
         setObjectDimensions(document.getElementById('sm-' + c), SMWidth, SMHeight);
       }
     }
 
+    function loadBigMap(map) {
+      var bMURL = URLForDimensions(map.url, BMWidth, BMHeight);
+
+      $('#bm').fadeOut(FADE_DURATION_MS, function(){
+        $(this).attr('src', bMURL).bind('onreadystatechange load', function(){
+           if (this.complete) $(this).fadeIn(FADE_DURATION_MS);
+        });
+      });
+      document.getElementById('title').innerHTML = map.title + ' (' + map.taiw + ' ago)';
+      document.getElementById('author').innerHTML = 'by ' + map.author;
+    }
+
     function loadSmallMaps(maps) {
-      for (var c in maps) {
-        loadSmallMap(maps[c], c);
-      }
+      for (var c in maps) loadSmallMap(maps[c], c)
     }
 
     function loadSmallMap(map, index) {

@@ -18,6 +18,7 @@
 <script type="text/javascript">
   MAX_DISPLAY_MAPS = <%= MapsController::MAX_DISPLAY_MAPS %>;
   FADE_DURATION_MS = 500;
+  MAP_STEP_MS = 20000;
 
   var maps = <%= raw @maps.map(&:to_hash).each { |hash| hash[:taiw] = time_ago_in_words(hash[:published_at])}.to_json %>
   var currentlyShowing = 0;
@@ -26,7 +27,7 @@
     setUp();
     showNextMap();
 
-    pid = setInterval(showNextMap, 10000);
+    pid = setInterval(showNextMap, MAP_STEP_MS);
 
     function setUp () {
       App.published = App.cable.subscriptions.create("PublishedChannel", {

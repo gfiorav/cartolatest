@@ -9,7 +9,7 @@ class MapsController < ApplicationController
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
   rescue_from ActiveRecord::RecordInvalid, with: :record_invalid
 
-  MAX_MAPS = 50
+  MAX_MAPS = 6
 
   def index
     @maps = Map.order(created_at: :desc).take(MAX_MAPS)

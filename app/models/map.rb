@@ -3,7 +3,7 @@ class Map < ActiveRecord::Base
   validates :visualization_id, uniqueness: true
   validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis
 
-  after_create_commit { MapBroadcastJob.perform_later(visualization_id) }
+  after_create_commit { ActionCable.server.broadcast('published_channel', map: to_hash) }
 
   def self.from_event(event)
     indifferent_event = event.with_indifferent_access
@@ -29,5 +29,17 @@ class Map < ActiveRecord::Base
     template_name = "tpl_#{visualization_id.gsub('-','_')}"
 
     "https://#{author}.carto.com/api/v1/map/static/named/#{template_name}/{X}/{Y}.png"
+  end
+
+  def to_hash
+    {
+      url: url,
+      title: title,
+      embed_url: embed_url,
+      author: author,
+      organization: organization,
+      visualization_id: visualization_id,
+      published_at: published_at
+    }
   end
 end

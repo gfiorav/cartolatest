@@ -1,4 +1,4 @@
-<!-- <div class='main-map'>
+<div class='main-map'>
   <img id='bm'/>
   <div class='main-map-overlay'>
     <div class='metainfo'>
@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class='bottom-bar'>
-  <% @maps.each_with_index do |_, index| %>
+  <% MapsController::MAX_MAPS.times do |index| %>
     <div class='small-map'>
       <img id='sm-<%= index %>'/>
     </div>
@@ -16,29 +16,38 @@
 </div>
 
 <script type="text/javascript">
-  var maps = <%= raw @maps.map { |map| present_map(map) }.to_json %>
+  MAX_MAPS = <%= MapsController::MAX_MAPS %>;
+
+  var maps = <%= raw @maps.map(&:to_hash).to_json %>
   var currentlyShowing = 0;
 
   $(document).ready(function () {
     setUp();
-    pid = setInterval(loadBoard, 5000);
+    showNextMap();
 
     function setUp () {
+      App.published = App.cable.subscriptions.create("PublishedChannel", {
+        connected: function () {
+          console.log('Cable connected!');
+        },
+
+        received: function (message) {
+          if (maps.length > MAX_MAPS) {
+            maps.pop();
+          }
+
+          maps.unshift(message['map']);
+
+          showNextMap();
+        }
+      });
       setupBigMap();
       setupSmallMaps();
     }
 
-    function loadBoard() {
-      loadBigMap(maps[currentlyShowing]);
+    function showNextMap() {
+      loadBigMap(maps[0]);
       loadSmallMaps(maps);
-
-      if (currentlyShowing === maps.length - 1) {
-        clearInterval(pid);
-        window.location.reload();
-      } else {
-        currentlyShowing++;
-      }
-
     }
 
     function loadBigMap(map) {
@@ -65,7 +74,7 @@
       SMWidth = container.width();
       SMHeight = container.height();
 
-      for (var c in maps) {
+      for (var c = 0; c < MAX_MAPS; c++) {
         setObjectDimensions(document.getElementById('sm-' + c), SMWidth, SMHeight);
       }
     }
@@ -91,4 +100,4 @@
       return url.replace('{X}', Math.floor(width)).replace('{Y}', Math.floor(height));
     }
   })
-</script> -->
+</script>

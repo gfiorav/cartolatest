@@ -15,9 +15,7 @@ class MapsController < ApplicationController
   private
 
     def fetch_latest_published
-      new_maps = CartoLatest::Metrics.new.latest_published.map { |event| Map.from_event(event) }
-
-      new_maps.each(&:save)
+      CartoLatest::Metrics.new.latest_published.map { |event| Map.from_event(event) }.each(&:save)
     end
 
     def remove_old_maps

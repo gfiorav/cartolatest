@@ -1,7 +1,7 @@
 class Map < ActiveRecord::Base
   validates :author, :visualization_id, :privacy, :published_at, presence: true
   validates :visualization_id, uniqueness: true
-  validates :privacy, inclusion: { in: ['public'] } # don't load link/private vis
+  validates :privacy, inclusion: { in: ['public', 'link'] } # don't load link/private vis
 
   after_create_commit { ActionCable.server.broadcast('published_channel', map: to_hash) }
 

@@ -8,7 +8,7 @@
   </div>
 </div>
 <div class='bottom-bar'>
-  <% (MapsController::MAX_DISPLAY_MAPS - 1).times do |index| %>
+  <% MapsController::MAX_DISPLAY_MAPS.times do |index| %>
     <div class='small-map'>
       <img id='sm-<%= index %>'/>
     </div>
@@ -42,6 +42,7 @@
 
           maps.unshift(message['map']);
 
+          currentlyShowing = 0;
           showNextMap();
         }
       });
